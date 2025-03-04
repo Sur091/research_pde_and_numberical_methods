@@ -1,4 +1,4 @@
-# research_pde_and_numberical_methods
+# Research for PDE and Numerical Methods
 Examples for solving pde. Undergraduate research.
 
 
