@@ -69,7 +69,8 @@ def heat_equation_backward_difference(f: Callable[[float], float], l:float, T:fl
         solution[:, j] = W.copy()
     return solution
 
-if __name__ == "__main__":
+
+def main():
     f: Callable[[float], float] = lambda x: np.sin(np.pi * x)
     l: float = 1.0
     T: float = 1.0
@@ -78,3 +79,8 @@ if __name__ == "__main__":
     N: int = 100
     solution = heat_equation_backward_difference(f, l, T, alpha, m, N)
     print("solution: w_{i, 50}", solution[:, 50])
+
+
+
+if __name__ == "__main__":
+    main()
