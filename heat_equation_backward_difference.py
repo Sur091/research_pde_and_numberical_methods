@@ -24,46 +24,46 @@ def heat_equation_backward_difference(f: Callable[[float], float], l:float, T:fl
     lam: float = alpha * alpha * k / (h * h)
 
     # Solution array
-    W = np.zeros(m)
-    solution = np.zeros((m, N+1))
+    W = np.zeros(m-1)
+    solution = np.zeros((m-1, N+1))
 
     # ls
-    l_array = np.zeros(m)
-    u_array = np.zeros(m)
-    z_array = np.zeros(m)
+    l_array = np.zeros(m-1)
+    u_array = np.zeros(m-1)
+    z_array = np.zeros(m-1)
 
     # STEP 2
-    for i in range(1, m):
+    for i in range(m-1):
         W[i] = f(i * h)
 
     # STEP 3
-    l_array[1]= 1.0 + 2.0 * lam;
-    u_array[1]= -lam / l_array[1];
+    l_array[0]= 1.0 + 2.0 * lam;
+    u_array[0]= -lam / l_array[0];
 
     # STEP 4
-    for i in range(2, m-1):
+    for i in range(1, m-2):
         l_array[i] = 1.0 + 2.0 * lam + lam * u_array[i-1];
         u_array[i] = -lam / l_array[i];
 
     # STEP 5
-    l_array[m-1] = 1.0 + 2.0 * lam + lam * u_array[m-2]
+    l_array[m-2] = 1.0 + 2.0 * lam + lam * u_array[m-3]
 
     # STEP 6
-    for j in range(1, N+1):
+    for j in range(N+1):
         # STEP 7
         t: float = j * k;
-        z_array[1] = W[1] / l_array[1]
+        z_array[0] = W[0] / l_array[0]
 
         # STEP 8
-        for i in range(2, m):
+        for i in range(2, m-1):
             z_array[i] = (W[i] + lam * z_array[i-1]) / l_array[i]
         # print("z_array", z_array)
 
         # STEP 9
-        W[m-1] = z_array[m-1]
+        W[m-2] = z_array[m-2]
 
         # STEP 10
-        for i in range(m-2, 0, -1):
+        for i in range(m-3, -1, -1):
             W[i] = z_array[i] - u_array[i] * W[i+1]
 
         # STEP 11
@@ -80,9 +80,10 @@ def main():
     N: int = 100
     # The solution is m x N+1 matrix
     solution = heat_equation_backward_difference(f, l, T, alpha, m, N)
+    # print(solution)
     
     # Create x and t arrays for plotting
-    x = np.linspace(0, l, m)         # m points for the spatial domain
+    x = np.linspace(0, l, m-1)         # m points for the spatial domain
     t = np.linspace(0, T, N+1)         # N+1 time points
 
     # Create a meshgrid. Note: meshgrid returns arrays of shape (len(t), len(x))
